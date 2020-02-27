@@ -7,7 +7,8 @@ class App extends React.Component {
     console.log("constructing");
     this.state = {
       chore: "",
-      chores: []
+      chores: [],
+      errorMessage: ""
     }
   }
 
@@ -17,12 +18,19 @@ class App extends React.Component {
   }
 
   addItem() {
-    console.log(this.state.chore);
-    let listOfChores = this.state.chores;
-    listOfChores.push(this.state.chore);
-    this.setState({chores: listOfChores})
-    console.log(listOfChores);
-    this.refs.input.value = " ";
+    if (this.state.chore.length > 1 && this.state.chore.length < 200) {
+      console.log(this.state.chore);
+      let listOfChores = this.state.chores;
+      listOfChores.push(this.state.chore);
+      this.setState({chores: listOfChores})
+      console.log(listOfChores);
+      this.refs.input.value = "";
+      this.setState({chore: ""});
+      this.setState({errorMessage: ""})
+    } else {
+      console.log(this.state.chore);
+      this.setState({errorMessage: "More than 1 character please"})
+    }
   }
 
   render() {
@@ -32,9 +40,11 @@ class App extends React.Component {
     return (
       <div>
         Welcome. Please enter your todo list. <br />
-        You are adding: {this.state.chore} <br />
-        <input onChange={(event)=>{this.changeHandler(event);}} type="text" /> 
-        <button onClick={()=>{this.addItem()}}>Add</button>
+        <br />
+        {/* You are adding: {this.state.chore} <br /> */}
+        <input onChange={(event)=>{this.changeHandler(event);}} ref="input" /> 
+        <button onClick={()=>{this.addItem()}}>Add</button> <br /><br />
+        {this.state.errorMessage} <br />
         <ul>{toDoList}</ul>
       </div>
     );
